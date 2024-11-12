@@ -2711,7 +2711,8 @@ void Npc::tickRoutine() {
 
   if(aiState.started) {
     if(aiState.loopNextTime<=owner.tickCount()) {
-      aiState.loopNextTime+=1000; // one tick per second?
+      bool isInteractingWithPlayer = (currentOther && currentOther->isPlayer()) || (currentVictum && currentVictum->isPlayer());
+      aiState.loopNextTime+=(isInteractingWithPlayer ? 10000 /*short reprieve*/ : 1000); // one tick per second?
       int loop = LOOP_CONTINUE;
       if(aiState.funcLoop.isValid()) {
         loop = owner.script().invokeState(this,currentOther,currentVictum,aiState.funcLoop);
